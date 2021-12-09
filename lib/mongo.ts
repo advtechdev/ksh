@@ -1,8 +1,17 @@
 import {
   MongoClient,
+  ReadConcern,
+  ReadPreference,
+  WriteConcern,
 } from "mongodb"
 import log from './logger'
 const logger = log()
+
+export const sessionOptions = {
+  readPreference: new ReadPreference('primary'),
+  readConcern: new ReadConcern('local'),
+  writeConcern: new WriteConcern('majority')
+}
 
 
 export const getConnection = async (url: string): Promise<MongoClient> => {
@@ -20,3 +29,7 @@ export const getConnection = async (url: string): Promise<MongoClient> => {
   }
   return client
 }
+
+export {
+  ClientSession
+} from 'mongodb'
