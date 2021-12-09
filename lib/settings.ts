@@ -3,14 +3,19 @@ const D_BROKERURL = "localhost"
 const D_BROKERPREFETCH = 50
 const D_BROKERQUORUMQUEUES = false
 const D_MONGOURL = "mongodb://localhost:27017"
+const D_SERVICENAME = "none"
+const D_ENV = "development"
 
 
 export interface Settings {
   mongoURL: string
   autoLoadCommandsDirectory?: string
-  brokerURL?: string,
-  brokerPreFetchingPolicy?: number,
+  brokerURL?: string
+  brokerPreFetchingPolicy?: number
   brokerQuorumQueuesEnabled?: boolean
+  sentryDSN?: string
+  serviceName?: string
+  environment?: string
 }
 
 export const defaultSettings: () => Settings = () => {
@@ -19,6 +24,8 @@ export const defaultSettings: () => Settings = () => {
     autoLoadCommandsDirectory: D_AUTOLOADCOMMDIR,
     brokerURL: D_BROKERURL,
     brokerPreFetchingPolicy: D_BROKERPREFETCH,
-    brokerQuorumQueuesEnabled: D_BROKERQUORUMQUEUES
+    brokerQuorumQueuesEnabled: D_BROKERQUORUMQUEUES,
+    serviceName: D_SERVICENAME,
+    environment: D_ENV
   }
 }

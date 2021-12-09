@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/kashin-dev/kshms#readme",
   "dependencies": {
+    "@sentry/node": "^6.16.0",
     "mongodb": "^4.2.1",
     "pino": "^7.0.0-rc.8",
     "rmq.io": "^1.0.14",
