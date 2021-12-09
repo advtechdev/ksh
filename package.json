@@ -1,0 +1,38 @@
+{
+  "name": "kshms",
+  "version": "0.0.1",
+  "description": "A little rabbitmq microservice framework",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kashin-dev/kshms.git"
+  },
+  "keywords": [
+    "ms",
+    "rabbitmq",
+    "microservice"
+  ],
+  "author": "Tex",
+  "license": "The Unlicense",
+  "bugs": {
+    "url": "https://github.com/kashin-dev/kshms/issues"
+  },
+  "homepage": "https://github.com/kashin-dev/kshms#readme",
+  "dependencies": {
+    "mongodb": "^4.2.1",
+    "pino": "^7.0.0-rc.8",
+    "rmq.io": "^1.0.14",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/pino": "^6.3.12",
+    "@types/uuid": "^8.3.1"
+  }
+}
