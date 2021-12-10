@@ -1,4 +1,5 @@
 const D_AUTOLOADCOMMDIR = "commands"
+const D_BROKERROUTE = "test"
 const D_BROKERURL = "localhost"
 const D_BROKERPREFETCH = 50
 const D_BROKERQUORUMQUEUES = false
@@ -10,6 +11,7 @@ const D_ENV = "development"
 export interface Settings {
   mongoURL: string
   autoLoadCommandsDirectory?: string
+  brokerRoute?: string
   brokerURL?: string
   brokerPreFetchingPolicy?: number
   brokerQuorumQueuesEnabled?: boolean
@@ -26,6 +28,7 @@ export const defaultSettings: () => Settings = () => {
     brokerPreFetchingPolicy: D_BROKERPREFETCH,
     brokerQuorumQueuesEnabled: D_BROKERQUORUMQUEUES,
     serviceName: D_SERVICENAME,
-    environment: D_ENV
+    environment: D_ENV,
+    brokerRoute: D_BROKERROUTE
   }
 }
