@@ -5,7 +5,7 @@ import {
   Context,
   Handler,
   LogicError
-} from '../lib'
+} from '../dist/lib'
 
 
 interface TestData {
@@ -17,9 +17,9 @@ interface TestData {
 const run = async () => {
 
   const kshms = new App({
-    mongoURL: "-",
-    brokerURL: "-",
-    sentryDSN: "-",
+    mongoURL: "mongodb+srv://test:c6m7cgO6csDgXyLd@cluster0.ecfzp.mongodb.net/test?retryWrites=true&w=majority",
+    brokerURL: "amqps://wyghynzc:ayzCLTouG0zp1aCptUX5UeN1G4qB7Tuy@albatross.rmq.cloudamqp.com/wyghynzc",
+    sentryDSN: "https://1ac6e6aac05344cb93c564f1d6dcaee4@o998597.ingest.sentry.io/5992079",
     environment: "dev",
     serviceName: "tex",
     brokerRoute: "test",
