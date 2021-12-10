@@ -10,7 +10,7 @@ import {Settings} from './settings'
 
 export interface Context {
   broker: RMQ
-  db: MongoClient
+  repository: MongoClient
   UUID: typeof v4
   log: Logger
 }
@@ -25,6 +25,6 @@ export const initContext = async (s: Settings): Promise<Context> => {
     }),
     log: log(),
     UUID: v4,
-    db: dbConn
+    repository: dbConn
   }
 }
