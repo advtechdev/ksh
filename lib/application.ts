@@ -10,17 +10,17 @@ import {
   sessionOptions
 } from './mongo'
 
-export type Handler<T> = (data: T, context?: Context) => void
+export type Handler<T, S extends Settings> = (data: T, context?: Context<S>) => void
 
-export interface Command {
-  handler: Handler<any>
+export interface Command<S extends Settings> {
+  handler: Handler<any, S>
   topic: string
 }
 
-export class App {
-  private context?: Context
+export class App<S extends Settings> {
+  private context?: Context<S>
 
-  constructor(private settings: Settings = defaultSettings()) {}
+  constructor(private settings: S) {}
 
   async init() {
     if (this.settings.autoLoadCommandsDirectory)
@@ -49,12 +49,12 @@ export class App {
     libs = makeRelative(libs, __dirname)
     libs
       .map(async (l: string) => {
-        const {topic, handler}: Command = await import('./' + l)
+        const {topic, handler}: Command<S> = await import('./' + l)
         this.handle(topic, handler)
       })
   }
 
-  handle<T>(eventName: string, handler: Handler<T>, transact = false) {
+  handle<T>(eventName: string, handler: Handler<T, S>, transact = false) {
     if (!this.context)
       throw new ContextError("Theres no context available")
 

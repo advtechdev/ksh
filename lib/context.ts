@@ -8,14 +8,17 @@ import {RMQ, rmqio} from 'rmq.io'
 import {getConnection} from './mongo'
 import {Settings} from './settings'
 
-export interface Context {
-  broker: RMQ
-  repository: MongoClient
-  UUID: typeof v4
-  log: Logger
+
+export interface Context<S extends Settings> {
+  readonly broker: RMQ
+  readonly repository: MongoClient
+  readonly UUID: typeof v4
+  readonly log: Logger
+  build?(settings: S): Context<S> | Promise<Context<S>>
 }
 
-export const initContext = async (s: Settings): Promise<Context> => {
+
+export const initContext = async<S extends Settings>(s: Settings): Promise<Context<S>> => {
   const dbConn = await getConnection(s.mongoURL)
   return {
     broker: rmqio({
