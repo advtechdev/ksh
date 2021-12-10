@@ -31,6 +31,9 @@
       "url": "https://github.com/AnthonyLzq"
     }
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "license": "The Unlicense",
   "bugs": {
     "url": "https://github.com/kashin-dev/kshms/issues"
