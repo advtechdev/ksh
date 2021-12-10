@@ -10,19 +10,17 @@ import {
   sessionOptions
 } from './mongo'
 
-declare type Handler<T> = (data: T, context?: Context) => void
+export type Handler<T, S extends Settings> = (data: T, context?: Context<S>) => void
 
-declare interface Command {
-  handler: Handler<any>
+export interface Command<S extends Settings> {
+  handler: Handler<any, S>
   topic: string
 }
 
-export default class App {
-  private context?: Context
+export class App<S extends Settings> {
+  private context?: Context<S>
 
-  constructor(private settings: Settings = defaultSettings()) {
-    this.init()
-  }
+  constructor(private settings: S) {}
 
   async init() {
     if (this.settings.autoLoadCommandsDirectory)
@@ -38,7 +36,7 @@ export default class App {
 
   }
 
-  reportError<E>(e: E, data?: ErrorData) {
+  private reportError<E>(e: E, data?: ErrorData) {
     const scope = new Sentry.Scope()
     scope.setTag("ms", this.settings.environment)
     scope.setTag("command", data?.eventName)
@@ -46,22 +44,22 @@ export default class App {
     Sentry.captureException(e, scope)
   }
 
-  loadCommands(directory: string) {
+  private loadCommands(directory: string) {
     let libs = getLibs(directory)
     libs = makeRelative(libs, __dirname)
     libs
       .map(async (l: string) => {
-        const {topic, handler}: Command = await import('./' + l)
+        const {topic, handler}: Command<S> = await import('./' + l)
         this.handle(topic, handler)
       })
   }
 
-  handle<T>(eventName: string, handler: Handler<T>, transact = false) {
+  handle<T>(eventName: string, handler: Handler<T, S>, transact = false) {
     if (!this.context)
       throw new ContextError("Theres no context available")
 
     this.context.broker.on(eventName, async (data: T, ack, nack) => {
-      let dbSession = this.context!.db.startSession()
+      let dbSession = this.context!.repository.startSession()
       try {
         if (transact) {
           dbSession.startTransaction(sessionOptions)
@@ -84,6 +82,15 @@ export default class App {
       }
     })
   }
-  start() {}
+  async start() {
+    await this.context!.broker
+      .setServiceName(
+        this.settings!.serviceName!
+      )
+      .setRoute(
+        this.settings!.brokerRoute!
+      )
+      .start()
+  }
 
 }
