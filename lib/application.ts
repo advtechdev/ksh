@@ -10,19 +10,17 @@ import {
   sessionOptions
 } from './mongo'
 
-declare type Handler<T> = (data: T, context?: Context) => void
+export type Handler<T> = (data: T, context?: Context) => void
 
-declare interface Command {
+export interface Command {
   handler: Handler<any>
   topic: string
 }
 
-export default class App {
+export class App {
   private context?: Context
 
-  constructor(private settings: Settings = defaultSettings()) {
-    this.init()
-  }
+  constructor(private settings: Settings = defaultSettings()) {}
 
   async init() {
     if (this.settings.autoLoadCommandsDirectory)
@@ -38,7 +36,7 @@ export default class App {
 
   }
 
-  reportError<E>(e: E, data?: ErrorData) {
+  private reportError<E>(e: E, data?: ErrorData) {
     const scope = new Sentry.Scope()
     scope.setTag("ms", this.settings.environment)
     scope.setTag("command", data?.eventName)
@@ -46,7 +44,7 @@ export default class App {
     Sentry.captureException(e, scope)
   }
 
-  loadCommands(directory: string) {
+  private loadCommands(directory: string) {
     let libs = getLibs(directory)
     libs = makeRelative(libs, __dirname)
     libs
@@ -61,7 +59,7 @@ export default class App {
       throw new ContextError("Theres no context available")
 
     this.context.broker.on(eventName, async (data: T, ack, nack) => {
-      let dbSession = this.context!.db.startSession()
+      let dbSession = this.context!.repository.startSession()
       try {
         if (transact) {
           dbSession.startTransaction(sessionOptions)
@@ -84,6 +82,15 @@ export default class App {
       }
     })
   }
-  start() {}
+  async start() {
+    await this.context!.broker
+      .setServiceName(
+        this.settings!.serviceName!
+      )
+      .setRoute(
+        this.settings!.brokerRoute!
+      )
+      .start()
+  }
 
 }
