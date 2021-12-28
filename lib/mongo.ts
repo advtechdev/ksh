@@ -1,9 +1,4 @@
-import {
-  MongoClient,
-  ReadConcern,
-  ReadPreference,
-  WriteConcern,
-} from "mongodb"
+import { MongoClient, ReadConcern, ReadPreference, WriteConcern } from 'mongodb'
 import log from './logger'
 const logger = log()
 
@@ -13,23 +8,21 @@ export const sessionOptions = {
   writeConcern: new WriteConcern('majority')
 }
 
-
 export const getConnection = async (url: string): Promise<MongoClient> => {
   const client = new MongoClient(url)
   try {
     // Connect the client to the server
     await client.connect()
     // Establish and verify connection
-    await client.db("admin").command({ping: 1});
-    logger.info("Connected successfully to server");
+    await client.db('admin').command({ ping: 1 })
+    logger.info('Connected successfully to server')
   } catch (e) {
     // Ensures that the client will close when you finish/error
     logger.error(e)
-    await client.close();
+    await client.close()
   }
+
   return client
 }
 
-export {
-  ClientSession
-} from 'mongodb'
+export { ClientSession } from 'mongodb'

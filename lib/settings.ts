@@ -1,12 +1,11 @@
-const D_AUTOLOADCOMMDIR = "commands"
-const D_BROKERROUTE = "test"
-const D_BROKERURL = "localhost"
+const D_AUTOLOADCOMMDIR = 'commands'
+const D_BROKERROUTE = 'test'
+const D_BROKERURL = 'localhost'
 const D_BROKERPREFETCH = 50
 const D_BROKERQUORUMQUEUES = false
-const D_MONGOURL = "mongodb://localhost:27017"
-const D_SERVICENAME = "none"
-const D_ENV = "development"
-
+const D_MONGOURL = 'mongodb://localhost:27017'
+const D_SERVICENAME = 'none'
+const D_ENV = 'development'
 
 export interface Settings {
   mongoURL: string
