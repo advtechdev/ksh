@@ -1,11 +1,4 @@
-import {
-  Settings,
-  App,
-  Command,
-  Context,
-  Handler,
-  LogicError
-} from '../dist/lib'
+import { Settings, App, Command, Context, Handler, LogicError } from '../dist'
 
 interface TestData {
   id: string

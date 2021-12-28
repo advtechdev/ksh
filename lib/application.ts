@@ -18,6 +18,7 @@ export interface Command<S extends Settings> {
 export class App<S extends Settings> {
   private context?: Context<S>
 
+  // eslint-disable-next-line no-useless-constructor
   constructor(private settings: S) {}
 
   async init() {

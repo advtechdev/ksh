@@ -10,6 +10,7 @@ enum ERROR_CODES {
 
 class KError extends Error {
   public code = 0
+  // eslint-disable-next-line no-useless-constructor
   constructor(msg: string) {
     super(msg)
   }
@@ -17,6 +18,7 @@ class KError extends Error {
 
 class ContextError extends KError {
   public code = ERROR_CODES.Context
+  // eslint-disable-next-line no-useless-constructor
   constructor(msg: string) {
     super(msg)
   }
@@ -24,6 +26,7 @@ class ContextError extends KError {
 
 class LogicError extends KError {
   public code = ERROR_CODES.Logic
+  // eslint-disable-next-line no-useless-constructor
   constructor(msg: string) {
     super(msg)
   }
