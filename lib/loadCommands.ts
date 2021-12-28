@@ -5,23 +5,26 @@ const jsFileRegex = /\.ts$/
 
 const isDirectory = (p: string) => fs.statSync(p).isDirectory()
 const getDirectories = (p: string) =>
-  fs.readdirSync(p).map(name => path.join(p, name)).filter(isDirectory)
+  fs
+    .readdirSync(p)
+    .map(name => path.join(p, name))
+    .filter(isDirectory)
 
-const isJsFile = (p: string) =>
-  fs.statSync(p).isFile() && jsFileRegex.test(p)
+const isJsFile = (p: string) => fs.statSync(p).isFile() && jsFileRegex.test(p)
 
 const getJsFiles = (p: string) => {
-  const res = fs.readdirSync(p)
+  const res = fs
+    .readdirSync(p)
     .map(name => path.join(p, name))
     .filter(isJsFile)
+
   return res
 }
 
 export const getLibs = (p: string): Array<string> => {
   const dirs = getDirectories(p)
-  const files = dirs
-    .map(dir => getLibs(dir))
-    .reduce((a, b) => a.concat(b), [])
+  const files = dirs.map(dir => getLibs(dir)).reduce((a, b) => a.concat(b), [])
+
   return files.concat(getJsFiles(p))
 }
 

@@ -5,7 +5,7 @@ export interface ErrorData {
 
 enum ERROR_CODES {
   Context = 1000,
-  Logic,
+  Logic
 }
 
 class KError extends Error {
@@ -29,8 +29,4 @@ class LogicError extends KError {
   }
 }
 
-
-export {
-  ContextError,
-  LogicError
-}
+export { ContextError, LogicError }
