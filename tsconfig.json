@@ -3,14 +3,17 @@
     "declaration": true,
     "target": "es5",                          
     "module": "commonjs",                    
-    "lib": ["es6"],                     
+    "lib": [
+      "ES2021"
+    ],                     
     "allowJs": true,
     "outDir": "dist",                          
     "rootDirs": ["lib"],
     "strict": true,         
     "noImplicitAny": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "strictNullChecks": true
   },
   "exclude": [
     "node_modules",
