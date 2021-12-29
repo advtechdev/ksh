@@ -1,36 +1,37 @@
 import fs from 'fs'
 import path from 'path'
 
-const jsFileRegex = /\.ts$/
+const tsFileRegex = /\.ts$/
 
 const isDirectory = (p: string) => fs.statSync(p).isDirectory()
+
 const getDirectories = (p: string) =>
   fs
     .readdirSync(p)
     .map(name => path.join(p, name))
     .filter(isDirectory)
 
-const isJsFile = (p: string) => fs.statSync(p).isFile() && jsFileRegex.test(p)
+const isTsFile = (p: string) => fs.statSync(p).isFile() && tsFileRegex.test(p)
 
-const getJsFiles = (p: string) => {
+const getTsFiles = (p: string) => {
   const res = fs
     .readdirSync(p)
     .map(name => path.join(p, name))
-    .filter(isJsFile)
+    .filter(isTsFile)
 
   return res
 }
 
-export const getLibs = (p: string): Array<string> => {
+export const getLibs = (p: string): string[] => {
   const dirs = getDirectories(p)
-  const files = dirs.map(dir => getLibs(dir)).reduce((a, b) => a.concat(b), [])
+  const files = dirs.map(dir => getLibs(dir)).flat()
 
-  return files.concat(getJsFiles(p))
+  return files.concat(getTsFiles(p))
 }
 
 /**
- * @param {string} array with file paths.
+ * @param {string[]} array with file paths.
  * @param {string} cwd current working directory.
  */
-export const makeRelative = (arr = Array<string>(), cwd: string) =>
+export const makeRelative = (arr: string[], cwd: string) =>
   arr.map(f => path.relative(cwd, f))
