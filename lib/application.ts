@@ -1,13 +1,12 @@
 import * as Sentry from '@sentry/node'
-import { v4 } from 'uuid'
-import log from './logger'
 import { rmqio } from 'rmq.io'
-
-import { getLibs, makeRelative } from './loadCommands'
+import { v4 } from 'uuid'
 import { Context } from './context'
-import { Settings } from './settings'
 import { ContextError, ErrorData } from './error'
-import { sessionOptions, getConnection } from './mongo'
+import { getLibs, makeRelative } from './loadCommands'
+import log from './logger'
+import { getConnection, sessionOptions } from './mongo'
+import { Settings } from './settings'
 
 export type Handler<T, C extends Context> = (data: T, context: C) => void
 
@@ -16,18 +15,25 @@ export interface Command<C extends Context> {
   topic: string
 }
 
-export class App<C extends Context> {
-  private context?: C
+export type CreateCustomContextFunction<C extends Record<string, unknown>> = (
+  ctx: Context
+) => Promise<C>
 
-  constructor(private settings: Settings, context?: C) {
-    if (context) this.context = context
-  }
+export class App<C extends Record<string, unknown>> {
+  private context?: Context<C>
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(
+    private settings: Settings,
+    private createCustomContext: CreateCustomContextFunction<C> = () =>
+      ({} as C)
+  ) {}
 
   public async config() {
     if (this.settings.autoLoadCommandsDirectory)
       await this.loadCommands(this.settings.autoLoadCommandsDirectory)
 
-    if (!this.context) this.context = await this.initContext()
+    this.context = await this.initContext()
 
     Sentry.init({
       dsn: this.settings.sentryDSN,
@@ -49,30 +55,37 @@ export class App<C extends Context> {
     libs = makeRelative(libs, __dirname)
     await Promise.all(
       libs.map(async (l: string) => {
-        const { topic, handler }: Command<C> = await import('./' + l)
+        const { topic, handler }: Command<Context<C>> = await import(`./${l}`)
         this.handle(topic, handler)
       })
     )
   }
 
-  private async initContext() {
+  private async initContext(): Promise<Context<C>> {
     const dbConn = await getConnection(this.settings.mongoURL)
 
-    return {
+    const baseContext: Context = {
       broker: rmqio({
-        url: this.settings.brokerURL || 'localhost',
+        url: this.settings.brokerURL,
         preFetchingPolicy: this.settings.brokerPreFetchingPolicy || 50,
         quorumQueuesEnabled: this.settings.brokerQuorumQueuesEnabled || false
       }),
       log: log(),
       UUID: v4,
       repository: dbConn
-    } as C
+    }
+
+    const customContext = await this.createCustomContext(baseContext)
+
+    return {
+      ...baseContext,
+      ...customContext
+    }
   }
 
   public handle<T>(
     eventName: string,
-    handler: Handler<T, C>,
+    handler: Handler<T, Context<C>>,
     transact = false
   ) {
     if (!this.context) throw new ContextError('Missing context')
