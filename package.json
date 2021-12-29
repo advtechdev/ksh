@@ -1,5 +1,5 @@
 {
-  "name": "@kashin-dev/kshms",
+  "name": "@kashin-dev/ksh",
   "version": "0.0.2",
   "description": "A little microservice framework",
   "scripts": {
@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kashin-dev/kshms.git"
+    "url": "git+https://github.com/kashin-dev/ksh.git"
   },
   "keywords": [
     "ms",
@@ -37,9 +37,9 @@
   },
   "license": "The Unlicense",
   "bugs": {
-    "url": "https://github.com/kashin-dev/kshms/issues"
+    "url": "https://github.com/kashin-dev/ksh/issues"
   },
-  "homepage": "https://github.com/kashin-dev/kshms#readme",
+  "homepage": "https://github.com/kashin-dev/ksh#readme",
   "dependencies": {
     "@sentry/node": "^6.16.0",
     "mongodb": "^4.2.1",
