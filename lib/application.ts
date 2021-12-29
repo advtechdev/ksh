@@ -6,13 +6,13 @@ import { rmqio } from 'rmq.io'
 import { getLibs, makeRelative } from './loadCommands'
 import { Context } from './context'
 import { Settings } from './settings'
-import { ErrorData } from './error'
+import { ContextError, ErrorData } from './error'
 import { sessionOptions, getConnection } from './mongo'
 
 export type Handler<T, C extends Context> = (data: T, context?: C) => void
 
 export interface Command<C extends Context> {
-  handler: Handler<any, C>
+  handler: Handler<unknown, C>
   topic: string
 }
 
@@ -75,12 +75,14 @@ export class App<C extends Context> {
     handler: Handler<T, C>,
     transact = false
   ) {
-    this.context!.broker.on(eventName, async (data: T, ack, nack) => {
-      const dbSession = this.context!.repository.startSession()
+    if (!this.context) throw new ContextError('Missing context')
+
+    const context = this.context
+
+    context.broker.on(eventName, async (data: T, ack, nack) => {
+      const dbSession = context.repository.startSession()
       try {
-        if (transact) {
-          dbSession.startTransaction(sessionOptions)
-        }
+        if (transact) dbSession.startTransaction(sessionOptions)
 
         handler(data, this.context)
 
@@ -101,8 +103,11 @@ export class App<C extends Context> {
   }
 
   public async start() {
-    await this.context!.broker.setServiceName(this.settings!.serviceName!)
-      .setRoute(this.settings!.brokerRoute!)
+    if (!this.context) throw new ContextError('Missing context')
+
+    await this.context.broker
+      .setServiceName(this.settings.serviceName)
+      .setRoute(this.settings.brokerRoute)
       .start()
   }
 }
