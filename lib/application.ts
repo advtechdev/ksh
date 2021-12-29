@@ -9,7 +9,7 @@ import { Settings } from './settings'
 import { ContextError, ErrorData } from './error'
 import { sessionOptions, getConnection } from './mongo'
 
-export type Handler<T, C extends Context> = (data: T, context?: C) => void
+export type Handler<T, C extends Context> = (data: T, context: C) => void
 
 export interface Command<C extends Context> {
   handler: Handler<unknown, C>
@@ -84,7 +84,7 @@ export class App<C extends Context> {
       try {
         if (transact) dbSession.startTransaction(sessionOptions)
 
-        handler(data, this.context)
+        handler(data, context)
 
         if (transact) {
           await dbSession.commitTransaction()
