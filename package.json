@@ -10,8 +10,8 @@
     "coverage": "jest --coverage",
     "example": "npx ts-node examples/simple.ts"
   },
-  "main": "dist/lib/index.js",
-  "types": "dist/lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "/dist"
   ],

@@ -8,7 +8,7 @@
     ],                     
     "allowJs": true,
     "outDir": "dist",                          
-    "rootDirs": ["lib"],
+    "rootDir": "lib",
     "strict": true,         
     "noImplicitAny": true,
     "esModuleInterop": true,
@@ -18,7 +18,8 @@
   "exclude": [
     "node_modules",
     "tests/**/*.test.ts",
-    "dist"
+    "dist",
+    "examples"
   ],
   "include": [
     "lib/**/*"
