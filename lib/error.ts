@@ -1,6 +1,6 @@
 export interface ErrorData {
   eventName: string
-  data: any
+  data: unknown
 }
 
 enum ERROR_CODES {
