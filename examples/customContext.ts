@@ -14,17 +14,11 @@ export type CustomContext = {
   test: string
 }
 
-export type AppCustomContext = {test: string}
+export type AppCustomContext = { test: string }
 export type AppContext = Context<AppCustomContext>
 
 const exampleWithCustomContext = async () => {
-  async function createCustomContext(ctx: Context) {
-    return {
-      test: 'test'
-    } as AppCustomContext
-  } 
-
-  const kshms = new App<AppCustomContext>(
+  const kshms = new App(
     {
       mongoURL: MONGO_URL,
       brokerURL: BROKER_URL,
@@ -35,7 +29,10 @@ const exampleWithCustomContext = async () => {
       brokerQuorumQueuesEnabled: false,
       brokerPreFetchingPolicy: 50
     },
-    createCustomContext
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async ctx => ({
+      test: 'test'
+    })
   )
 
   await kshms.config()

@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/node'
 import { rmqio } from 'rmq.io'
 import { v4 } from 'uuid'
+
 import { Context } from './context'
 import { ContextError, ErrorData } from './error'
 import { getLibs, makeRelative } from './loadCommands'
@@ -10,7 +11,7 @@ import { Settings } from './settings'
 
 export type Handler<T, C extends Context> = (data: T, context: C) => void
 
-export interface Command<C extends Context> {
+export type Command<C extends Context> = {
   handler: Handler<unknown, C>
   topic: string
 }
@@ -25,7 +26,7 @@ export class App<C extends Record<string, unknown>> {
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private settings: Settings,
-    private createCustomContext: CreateCustomContextFunction<C> = () =>
+    private createCustomContext: CreateCustomContextFunction<C> = async () =>
       ({} as C)
   ) {}
 
