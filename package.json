@@ -3,7 +3,7 @@
   "version": "0.0.4",
   "description": "A little microservice framework",
   "scripts": {
-    "prepublish": "tsc",
+    "prepack": "npm run build",
     "build": "tsc",
     "lint": "eslint --ext js,ts lib/ tests/ --fix",
     "test": "jest",
