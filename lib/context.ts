@@ -1,11 +1,15 @@
 import { MongoClient } from 'mongodb'
-import { v4 } from 'uuid'
 import { Logger } from 'pino'
 import { RMQ } from 'rmq.io'
+import { v4 } from 'uuid'
 
-export interface Context {
-  readonly broker: RMQ
-  readonly repository: MongoClient
-  readonly UUID: typeof v4
-  readonly log: Logger
-}
+export type Context<
+  C extends Record<string, unknown> = Record<string, unknown>
+> = Readonly<
+  {
+    broker: RMQ
+    repository: MongoClient
+    UUID: typeof v4
+    log: Logger
+  } & C
+>

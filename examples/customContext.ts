@@ -1,8 +1,4 @@
-import { rmqio } from 'rmq.io'
-import { v4 } from 'uuid'
 import { App, Context } from '../dist'
-import { getConnection } from '../dist/mongo'
-import log from '../dist/logger'
 
 const MONGO_URL = ''
 const BROKER_URL = ''
@@ -14,24 +10,14 @@ interface TestData {
   num: number
 }
 
-interface CustomContext extends Context {
+export type CustomContext = {
   test: string
 }
 
-const exampleWithCustomContext = async () => {
-  const repository = await getConnection(MONGO_URL)
-  const customContext: CustomContext = {
-    repository,
-    broker: rmqio({
-      url: BROKER_URL,
-      preFetchingPolicy: 50,
-      quorumQueuesEnabled: false
-    }),
-    log: log(),
-    UUID: v4,
-    test: 'test'
-  }
+export type AppCustomContext = { test: string }
+export type AppContext = Context<AppCustomContext>
 
+const exampleWithCustomContext = async () => {
   const kshms = new App(
     {
       mongoURL: MONGO_URL,
@@ -43,7 +29,10 @@ const exampleWithCustomContext = async () => {
       brokerQuorumQueuesEnabled: false,
       brokerPreFetchingPolicy: 50
     },
-    customContext
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async ctx => ({
+      test: 'test'
+    })
   )
 
   await kshms.config()
