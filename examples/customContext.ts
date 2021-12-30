@@ -39,7 +39,7 @@ const exampleWithCustomContext = async () => {
 
   kshms.handle<TestData>(
     'test',
-    (data, ctx) => {
+    async (data, ctx) => {
       ctx.repository.db('test').collection('test').insertOne(data)
 
       data.id = ctx.UUID()
@@ -51,7 +51,7 @@ const exampleWithCustomContext = async () => {
 
   kshms.handle<TestData>(
     'tested',
-    (data, ctx) => {
+    async (data, ctx) => {
       ctx.repository.db('test').collection('tested').insertOne(data)
 
       data.id = ctx.UUID()
@@ -61,6 +61,8 @@ const exampleWithCustomContext = async () => {
   )
 
   await kshms.start()
+
+  kshms.context?.log.info('Connected to broker')
 }
 
 exampleWithCustomContext()
