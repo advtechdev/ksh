@@ -9,7 +9,10 @@ import log from './logger'
 import { getConnection, sessionOptions } from './mongo'
 import { Settings } from './settings'
 
-export type Handler<T, C extends Context> = (data: T, context: C) => void
+export type Handler<T, C extends Context> = (
+  data: T,
+  context: C
+) => Promise<void>
 
 export type Command<C extends Context> = {
   handler: Handler<unknown, C>
@@ -21,7 +24,7 @@ export type CreateCustomContextFunction<C extends Record<string, unknown>> = (
 ) => Promise<C>
 
 export class App<C extends Record<string, unknown>> {
-  private context?: Context<C>
+  public context?: Context<C>
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
@@ -98,7 +101,7 @@ export class App<C extends Record<string, unknown>> {
       try {
         if (transact) dbSession.startTransaction(sessionOptions)
 
-        handler(data, context)
+        await handler(data, context)
 
         if (transact) {
           await dbSession.commitTransaction()
