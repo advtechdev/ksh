@@ -8,7 +8,7 @@
     "lint": "eslint --ext js,ts lib/ tests/ --fix",
     "test": "jest",
     "coverage": "jest --coverage",
-    "example": "npx ts-node examples/simple.ts"
+    "example": "npx ts-node examples/customContext.ts"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

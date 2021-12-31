@@ -1,3 +1,4 @@
+import * as path from 'path'
 import { App, Context } from '../dist'
 
 const MONGO_URL = ''
@@ -18,11 +19,12 @@ export type AppCustomContext = { test: string }
 export type AppContext = Context<AppCustomContext>
 
 const exampleWithCustomContext = async () => {
-  const kshms = new App(
+  const kshms = new App<AppCustomContext>(
     {
       mongoURL: MONGO_URL,
       brokerURL: BROKER_URL,
       sentryDSN: SENTRY_DSN,
+      autoLoadCommandsDirectory: path.join(__dirname, './commands'),
       environment: 'dev',
       serviceName: 'tex',
       brokerRoute: 'test',

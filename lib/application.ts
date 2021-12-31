@@ -34,10 +34,10 @@ export class App<C extends Record<string, unknown>> {
   ) {}
 
   public async config() {
+    this.context = await this.initContext()
+
     if (this.settings.autoLoadCommandsDirectory)
       await this.loadCommands(this.settings.autoLoadCommandsDirectory)
-
-    this.context = await this.initContext()
 
     Sentry.init({
       dsn: this.settings.sentryDSN,
