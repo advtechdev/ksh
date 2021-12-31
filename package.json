@@ -35,7 +35,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "license": "The Unlicense",
+  "license": "Unlicense",
   "bugs": {
     "url": "https://github.com/kashin-dev/ksh/issues"
   },
